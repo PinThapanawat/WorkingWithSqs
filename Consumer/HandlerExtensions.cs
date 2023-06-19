@@ -9,7 +9,7 @@ public static class HandlerExtensions
     public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
     {
         var handlers = Assembly.GetExecutingAssembly().DefinedTypes
-            .Where(x => typeof(IMessageHandler).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract);
+            .Where(x => typeof(IMessageHandler).IsAssignableFrom(x) && x is { IsInterface: false, IsAbstract: false });
 
         foreach (var handler in handlers)
         {

@@ -8,13 +8,13 @@ public class MessageDispatcher
 {
     private readonly IServiceScopeFactory _scopeFactory;
 
-    private readonly Dictionary<string, Type> _messageMappings;/* = new()
+    private readonly Dictionary<string, Type> _messageMappings; /* = new()
     {
         { nameof(CustomerCreated), typeof(CustomerCreated) },
         { nameof(CustomerDeleted), typeof(CustomerDeleted) }
     };*/
-    
-    private readonly Dictionary<string, Func<IServiceProvider, IMessageHandler>> _handlers;/* = new()
+
+    private readonly Dictionary<string, Func<IServiceProvider, IMessageHandler>> _handlers; /* = new()
     {
         { nameof(CustomerCreated), provider => provider.GetRequiredService<CustomerCreatedHandler>() },
         { nameof(CustomerDeleted), provider => provider.GetRequiredService<CustomerDeletedHandler>() }
@@ -30,8 +30,8 @@ public class MessageDispatcher
         _handlers = Assembly.GetExecutingAssembly().DefinedTypes
             .Where(x => typeof(IMessageHandler).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
             .ToDictionary<TypeInfo, string, Func<IServiceProvider, IMessageHandler>>(
-            info => ((Type)info.GetProperty(nameof(IMessageHandler.MessageType))!.GetValue(null)!)!.Name,
-            info => provider => (IMessageHandler)provider.GetRequiredService(info.AsType()));
+                info => ((Type)info.GetProperty(nameof(IMessageHandler.MessageType))!.GetValue(null)!)!.Name,
+                info => provider => (IMessageHandler)provider.GetRequiredService(info.AsType()));
     }
 
     public async Task DispatchAsync<TMessage>(TMessage message)
